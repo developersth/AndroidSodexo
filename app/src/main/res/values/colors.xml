@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#6200EE</color>
+    <color name="colorPrimaryDark">#3700B3</color>
+    <color name="colorAccent">#03DAC5</color>
+
+    <!--reds-->
+
+    <!-- pinks -->
+
+    <!-- purples -->
+
+    <!-- deep purples -->
+
+    <!-- indigo -->
+
+    <!--blue-->
+    <color name="md_blue_900">#0D47A1</color>
+
+    <!-- light blue-->
+
+    <!-- cyan -->
+
+    <!-- teal -->
+
+    <!-- green -->
+
+    <!--light green-->
+
+    <!-- lime-->
+
+    <!--yellow -->
+
+    <!--amber-->
+
+    <!--orange-->
+
+    <!--deep orange-->
+
+    <!--brown -->
+
+    <!--grey-->
+
+    <!--blue grey-->
+
+</resources>
