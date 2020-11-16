@@ -5,8 +5,8 @@
     <string name="title_notifications">Notifications</string>
     <string name="title_activity_login">LoginActivity</string>
     <!-- Strings related to login -->
-    <string name="invalid_username">Not a valid username</string>
-    <string name="invalid_password">Password must be >3 characters</string>
+    <string name="invalid_username">Please enter username</string>
+    <string name="invalid_password">Please enter password</string>
     <string name="login_failed">"Login failed"</string>
     <string name="error_internet">"Please Check Internet Connection"</string>
     <string name="username">Username</string>

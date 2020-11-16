@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "64858737925",
+    "firebase_url": "https://booking-sodexo.firebaseio.com",
+    "project_id": "booking-sodexo",
+    "storage_bucket": "booking-sodexo.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:64858737925:android:5f0491c9d8fb4ad17e3b6c",
+        "android_client_info": {
+          "package_name": "com.developerth.sodexobooking"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "64858737925-3nr6tou5760t5sd7lbijrausk4tr7hg9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDecVSFTyajRMe5213AQsVYGatbcIuHfts"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "64858737925-3nr6tou5760t5sd7lbijrausk4tr7hg9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

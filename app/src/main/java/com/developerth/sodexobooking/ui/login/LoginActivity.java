@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -36,6 +37,7 @@ import com.developerth.sodexobooking.R;
 import com.developerth.sodexobooking.data.model.LoginRequest;
 import com.developerth.sodexobooking.data.model.LoginResponse;
 import com.developerth.sodexobooking.services.ApiClient;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.security.KeyStore;
 import java.util.concurrent.Executor;
@@ -54,7 +56,6 @@ import static android.hardware.biometrics.BiometricManager.Authenticators.DEVICE
 
 public class LoginActivity extends AppCompatActivity {
 
-    private LoginViewModel loginViewModel;
     private static final String MY_PREFS = "my_prefs";
     private FingerprintManager mFingerprintManager;
     private KeyguardManager mKeyguardManager;
@@ -71,8 +72,7 @@ public class LoginActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        loginViewModel = ViewModelProviders.of(this, new LoginViewModelFactory())
-                .get(LoginViewModel.class);
+
 
         final EditText usernameEditText = findViewById(R.id.username);
         final EditText passwordEditText = findViewById(R.id.password);
@@ -124,8 +124,7 @@ public class LoginActivity extends AppCompatActivity {
                     String username =sharedPref.getString("username","");
                     String password =sharedPref.getString("password","");
                     login(username,password);
-                    Toast.makeText(getApplicationContext(),
-                            "Authentication succeeded!", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getApplicationContext(), "Authentication succeeded!", Toast.LENGTH_SHORT).show();
                 }
 
                 @Override
@@ -142,9 +141,9 @@ public class LoginActivity extends AppCompatActivity {
             });
 
             promptInfo = new BiometricPrompt.PromptInfo.Builder()
-                    .setTitle("เข้าสู่ระบบ")
-                    .setSubtitle("เข้าสู่ระบบโดยใช้ไบโอเมตริกซ์")
-                    .setNegativeButtonText("ใช้รหัสผ่านบัญชี")
+                    .setTitle("เข้าใช้งานระบบ")
+                    .setSubtitle("เข้าสู่ระบบใช้ลายน้ำมือ")
+                    .setNegativeButtonText("ยกเลิก")
                     .build();
 
             // Prompt appears when user clicks "Log in".
@@ -158,49 +157,6 @@ public class LoginActivity extends AppCompatActivity {
                 }
             });
 
-
-
-        loginViewModel.getLoginResult().observe(this, new Observer<LoginResult>() {
-            @Override
-            public void onChanged(@Nullable LoginResult loginResult) {
-                if (loginResult == null) {
-                    return;
-                }
-                 login(usernameEditText.getText().toString(),passwordEditText.getText().toString());
-            }
-        });
-
-        TextWatcher afterTextChangedListener = new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                // ignore
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                // ignore
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                loginViewModel.loginDataChanged(usernameEditText.getText().toString(),
-                        passwordEditText.getText().toString());
-            }
-        };
-        usernameEditText.addTextChangedListener(afterTextChangedListener);
-        passwordEditText.addTextChangedListener(afterTextChangedListener);
-        passwordEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    loginViewModel.login(usernameEditText.getText().toString(),
-                            passwordEditText.getText().toString());
-                }
-                return false;
-            }
-        });
-
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -208,8 +164,45 @@ public class LoginActivity extends AppCompatActivity {
                 login(usernameEditText.getText().toString(),passwordEditText.getText().toString());
             }
         });
+
+        Button btnGetToken = (Button) findViewById(R.id.btn_get_token);
+        btnGetToken.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toastToken();
+            }
+        });
+    }
+    public void toastToken(){
+        String token = FirebaseInstanceId.getInstance().getToken();
+
+        Toast.makeText(LoginActivity.this,
+                "TOKEN = "+token,
+                Toast.LENGTH_LONG).show();
+        Log.d("TOKEN = ",""+token);
+    }
+    private boolean checkValidate(final String username, final String password){
+        if (username.isEmpty()){
+            new SweetAlertDialog(LoginActivity.this, SweetAlertDialog.ERROR_TYPE)
+                    .setTitleText("Warning")
+                    .setContentText(getString(R.string.invalid_username))
+                    .show();
+            return  false;
+        }
+        if (password.isEmpty()){
+            new SweetAlertDialog(LoginActivity.this, SweetAlertDialog.ERROR_TYPE)
+                    .setTitleText("Warning")
+                    .setContentText(getString(R.string.invalid_password))
+                    .show();
+            return  false;
+        }
+        return  true;
     }
     public void login(final String username, final String password) {
+        //check validate
+        if (!checkValidate(username,password)){
+            return;
+        }
         final SweetAlertDialog pDialog = new SweetAlertDialog(this, SweetAlertDialog.PROGRESS_TYPE);
         pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
         pDialog.setTitleText("Loading");
@@ -285,11 +278,6 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    private void updateUiWithUser(LoggedInUserView model) {
-        String welcome = getString(R.string.app_name) + model.getDisplayName();
-        // TODO : initiate successful logged in experience
-        Toast.makeText(getApplicationContext(), welcome, Toast.LENGTH_LONG).show();
-    }
 
     private void showLoginFailed(@StringRes Integer errorString) {
         Toast.makeText(getApplicationContext(), errorString, Toast.LENGTH_SHORT).show();
